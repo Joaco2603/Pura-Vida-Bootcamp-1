@@ -118,12 +118,9 @@ export function PlayGame({ address }: { address?: string }) {
 
   return (
     <section className="play">
-      <h2>Jugar partida</h2>
-      <div className="play-names">
-        <input placeholder="Blancas" value={white} disabled={reg.status === 'busy' || reg.status === 'done'} onChange={(e) => setWhite(e.target.value)} />
-        <input placeholder="Negras" value={black} disabled={reg.status === 'busy' || reg.status === 'done'} onChange={(e) => setBlack(e.target.value)} />
-      </div>
-
+      <h2 className="title"><small>Jugá la</small>Partida</h2>
+      <div className="play-layout">
+      <div className="board-wrap">
       <div className={`board${over ? ' board-over' : ''}`} role="grid" aria-label="Tablero">
         {ranks.map((r) =>
           files.map((f) => {
@@ -146,8 +143,19 @@ export function PlayGame({ address }: { address?: string }) {
           }),
         )}
       </div>
+      </div>
 
-      <p className="play-status">
+      <aside className="panel">
+      <div className="play-names">
+        <label><span className="label">Blancas</span>
+          <input placeholder="Nombre" value={white} disabled={reg.status === 'busy' || reg.status === 'done'} onChange={(e) => setWhite(e.target.value)} />
+        </label>
+        <label><span className="label">Negras</span>
+          <input placeholder="Nombre" value={black} disabled={reg.status === 'busy' || reg.status === 'done'} onChange={(e) => setBlack(e.target.value)} />
+        </label>
+      </div>
+
+      <p className={`play-status${over ? ' is-over' : ''}`}>
         {over
           ? `${outcome.reason} — ${RESULTS[outcome.result]}`
           : `Turno de ${chess.turn() === 'w' ? 'blancas' : 'negras'}${chess.inCheck() ? ' (jaque)' : ''}`}
@@ -158,7 +166,7 @@ export function PlayGame({ address }: { address?: string }) {
         <button disabled={over || moves.length === 0} onClick={undo}>Deshacer</button>
         <button disabled={over || moves.length === 0} onClick={resign}>Abandonar</button>
         <button disabled={over || moves.length === 0} onClick={agreeDraw}>Tablas</button>
-        <button disabled={reg.status === 'busy'} onClick={newGame}>Nueva</button>
+        <button className="btn-red" disabled={reg.status === 'busy'} onClick={newGame}>Nueva</button>
       </div>
 
       {moves.length > 0 && (
@@ -171,14 +179,16 @@ export function PlayGame({ address }: { address?: string }) {
 
       {over && (
         <>
-          {reg.msg && <p>{reg.msg}</p>}
-          {reg.status === 'error' && <button onClick={() => void register()}>Reintentar registro</button>}
+          {reg.msg && <p className="msg">{reg.msg}</p>}
+          {reg.status === 'error' && <button className="btn-red" onClick={() => void register()}>Reintentar registro</button>}
           <details>
             <summary>PGN</summary>
             <textarea readOnly rows={6} value={pgnText()} />
           </details>
         </>
       )}
+      </aside>
+      </div>
     </section>
   )
 }

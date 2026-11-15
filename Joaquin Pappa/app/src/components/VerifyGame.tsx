@@ -20,11 +20,14 @@ export function VerifyGame({ address }: { address?: string }) {
   }
 
   return (
-    <section>
-      <h2>Verificar partida</h2>
-      <textarea rows={8} placeholder="Pegá el PGN" value={pgn} onChange={(e) => setPgn(e.target.value)} />
-      <button disabled={busy || !pgn} onClick={verify}>{busy ? 'Verificando…' : 'Verificar'}</button>
-      <p>{msg}</p>
+    <section className="narrow">
+      <h2 className="title"><small>Verificá la</small>Partida</h2>
+      <p className="lead">Pegá un PGN para comprobar si fue registrado on-chain y no fue alterado.</p>
+      <div className="form">
+        <label><span className="label">PGN</span><textarea rows={8} placeholder="1. e4 e5 2. Nf3 …" value={pgn} onChange={(e) => setPgn(e.target.value)} /></label>
+        <button className="btn-red" disabled={busy || !pgn} onClick={verify}>{busy ? 'Verificando…' : 'Verificar'}</button>
+        {msg && <p className="msg">{msg}</p>}
+      </div>
     </section>
   )
 }

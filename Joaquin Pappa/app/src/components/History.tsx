@@ -16,14 +16,20 @@ export function History({ address }: { address?: string }) {
       .finally(() => { if (!off) setLoading(false) })
     return () => { off = true }
   }, [address])
-  if (!address) return <p>Conectá tu wallet para ver tu historial.</p>
   return (
-    <section>
-      <h2>Mis partidas</h2>
-      {msg && <p>{msg}</p>}
-      {loading && <p>Cargando…</p>}
-      {!loading && !msg && hashes.length === 0 && <p>Sin partidas.</p>}
-      {hashes.length > 0 && <ul>{hashes.map((h) => <li key={h}><code>{h}</code></li>)}</ul>}
+    <section className="narrow">
+      <h2 className="title"><small>Revisá tus</small>Partidas</h2>
+      {!address && <p className="lead">Conectá tu wallet para ver tu historial.</p>}
+      {msg && <p className="msg">{msg}</p>}
+      {loading && <p className="lead">Cargando…</p>}
+      {address && !loading && !msg && hashes.length === 0 && <p className="lead">Sin partidas.</p>}
+      {hashes.length > 0 && (
+        <ul className="history">
+          {hashes.map((h, i) => (
+            <li key={h}><span className="history-n">{String(i + 1).padStart(2, '0')}</span><code>{h}</code></li>
+          ))}
+        </ul>
+      )}
     </section>
   )
 }

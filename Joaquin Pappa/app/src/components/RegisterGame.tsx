@@ -25,16 +25,23 @@ export function RegisterGame({ address }: { address?: string }) {
   }
 
   return (
-    <section>
-      <h2>Registrar partida</h2>
-      <input placeholder="Blancas" value={white} onChange={(e) => setWhite(e.target.value)} />
-      <input placeholder="Negras" value={black} onChange={(e) => setBlack(e.target.value)} />
-      <select value={result} onChange={(e) => setResult(Number(e.target.value))}>
-        {RESULTS.map((r, i) => <option key={r} value={i}>{r}</option>)}
-      </select>
-      <textarea rows={8} placeholder="Pegá el PGN" value={pgn} onChange={(e) => setPgn(e.target.value)} />
-      <button disabled={busy || !pgn || !white.trim() || !black.trim()} onClick={submit}>{busy ? 'Firmando…' : 'Registrar'}</button>
-      <p>{msg}</p>
+    <section className="narrow">
+      <h2 className="title"><small>Registrá la</small>Partida</h2>
+      <p className="lead">Pegá el PGN de una partida jugada fuera de la app. Se guarda su hash on-chain junto con jugadores y resultado.</p>
+      <div className="form">
+        <div className="row">
+          <label><span className="label">Blancas</span><input placeholder="Nombre" value={white} onChange={(e) => setWhite(e.target.value)} /></label>
+          <label><span className="label">Negras</span><input placeholder="Nombre" value={black} onChange={(e) => setBlack(e.target.value)} /></label>
+          <label><span className="label">Resultado</span>
+            <select value={result} onChange={(e) => setResult(Number(e.target.value))}>
+              {RESULTS.map((r, i) => <option key={r} value={i}>{r}</option>)}
+            </select>
+          </label>
+        </div>
+        <label><span className="label">PGN</span><textarea rows={8} placeholder="1. e4 e5 2. Nf3 …" value={pgn} onChange={(e) => setPgn(e.target.value)} /></label>
+        <button className="btn-red" disabled={busy || !pgn || !white.trim() || !black.trim()} onClick={submit}>{busy ? 'Firmando…' : 'Registrar'}</button>
+        {msg && <p className="msg">{msg}</p>}
+      </div>
     </section>
   )
 }

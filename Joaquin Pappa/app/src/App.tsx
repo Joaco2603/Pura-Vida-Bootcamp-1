@@ -7,25 +7,43 @@ import { PlayGame } from './components/PlayGame'
 
 type Tab = 'play' | 'register' | 'verify' | 'history'
 
+const TABS: { id: Tab; label: string }[] = [
+  { id: 'play', label: 'Jugar' },
+  { id: 'register', label: 'Registrar' },
+  { id: 'verify', label: 'Verificar' },
+  { id: 'history', label: 'Historial' },
+]
+
 export default function App() {
   const [address, setAddress] = useState<string>()
   const [tab, setTab] = useState<Tab>('play')
   return (
-    <main style={{ maxWidth: 720, margin: '0 auto', padding: 16, display: 'grid', gap: 12 }}>
-      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <h1>♟ Chess Ledger</h1>
-        <WalletButton address={address} onConnect={setAddress} />
+    <>
+      <header className="hero">
+        <div className="topbar">
+          <span className="topbar-line" />
+          <nav className="tabs">
+            {TABS.map((t) => (
+              <button key={t.id} className={tab === t.id ? 'tab active' : 'tab'} onClick={() => setTab(t.id)}>
+                {t.label}
+              </button>
+            ))}
+          </nav>
+          <span className="topbar-line" />
+        </div>
+        <div className="hero-frame">
+          <h1>Chess Ledger</h1>
+          <p className="hero-sub">On-chain registry</p>
+          <WalletButton address={address} onConnect={setAddress} />
+        </div>
       </header>
-      <nav style={{ display: 'flex', gap: 8 }}>
-        <button onClick={() => setTab('play')}>Jugar</button>
-        <button onClick={() => setTab('register')}>Registrar</button>
-        <button onClick={() => setTab('verify')}>Verificar</button>
-        <button onClick={() => setTab('history')}>Historial</button>
-      </nav>
-      {tab === 'play' && <PlayGame address={address} />}
-      {tab === 'register' && <RegisterGame address={address} />}
-      {tab === 'verify' && <VerifyGame address={address} />}
-      {tab === 'history' && <History address={address} />}
-    </main>
+      <main className="content">
+        {tab === 'play' && <PlayGame address={address} />}
+        {tab === 'register' && <RegisterGame address={address} />}
+        {tab === 'verify' && <VerifyGame address={address} />}
+        {tab === 'history' && <History address={address} />}
+      </main>
+      <footer className="footer">Stellar · Soroban · Testnet</footer>
+    </>
   )
 }
