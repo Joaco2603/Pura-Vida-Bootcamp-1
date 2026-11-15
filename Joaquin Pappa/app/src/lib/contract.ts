@@ -20,7 +20,7 @@ export async function gamesBy(address: string) {
 }
 export function friendlyError(e: unknown): string {
   const m = String((e as Error)?.message ?? e)
-  if (m.includes('#1')) return 'Esta partida ya fue registrada.'
-  if (m.includes('#2')) return 'Resultado inválido.'
+  if (/Error\(Contract, #1\)/.test(m)) return 'Esta partida ya fue registrada.'
+  if (/Error\(Contract, #2\)/.test(m)) return 'Resultado inválido.'
   return m
 }

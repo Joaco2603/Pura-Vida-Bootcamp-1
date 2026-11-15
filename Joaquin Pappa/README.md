@@ -39,7 +39,7 @@ Requisitos: Rust con target `wasm32v1-none`, Stellar CLI, Node.js y npm, y la ex
    ```bash
    stellar contract deploy --wasm target/wasm32v1-none/release/chess_registry.wasm --source <tu-cuenta> --network testnet
    ```
-   Si se despliega un contrato nuevo, actualizar el Contract ID en `app/src/lib/config.ts` y en los bindings.
+   Si se despliega un contrato nuevo, actualizar el Contract ID en `packages/chess_registry/src/index.ts` y recompilar los bindings (`app/src/lib/config.ts` lo lee de ahí).
 3. Bindings TypeScript:
    ```bash
    cd "Joaquin Pappa/packages/chess_registry" && npm install && npm run build
@@ -55,6 +55,8 @@ Requisitos: Rust con target `wasm32v1-none`, Stellar CLI, Node.js y npm, y la ex
 - **Quien registra primero gana**: cualquiera puede registrar un hash antes que el autor. El registro no prueba autoría, solo que la secuencia de jugadas existía en un momento dado.
 - **Entradas persistentes con TTL**: los registros tienen un TTL de ~29 días y se extienden al escribir. Si expiran, pueden restaurarse.
 - **Firma de una sola parte**: solo firma quien registra la partida; el otro jugador no confirma el registro.
+- **Alcance del hash**: solo cubre las jugadas SAN desde la posición inicial. Un PGN con header FEN se rechaza.
+- **Nombres sin límite**: el contrato actual no limita la longitud de los nombres.
 
 ## RAVEN_LOG
 

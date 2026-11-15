@@ -13,11 +13,14 @@ export function RegisterGame({ address }: { address?: string }) {
 
   async function submit() {
     if (!address) return setMsg('Conectá tu wallet primero.')
+    const w = white.trim(), b = black.trim()
+    if (!w || !b) return setMsg('Completá blancas y negras.')
     setBusy(true); setMsg('')
     try {
       const h = await hashPgn(pgn)
-      await registerGame(address, h, white, black, result)
+      await registerGame(address, h, w, b, result)
       setMsg(`✅ Registrada. Hash: ${toHex(h)}`)
+      setPgn('')
     } catch (e) { setMsg('❌ ' + friendlyError(e)) } finally { setBusy(false) }
   }
 
@@ -30,7 +33,7 @@ export function RegisterGame({ address }: { address?: string }) {
         {RESULTS.map((r, i) => <option key={r} value={i}>{r}</option>)}
       </select>
       <textarea rows={8} placeholder="Pegá el PGN" value={pgn} onChange={(e) => setPgn(e.target.value)} />
-      <button disabled={busy || !pgn || !white || !black} onClick={submit}>{busy ? 'Firmando…' : 'Registrar'}</button>
+      <button disabled={busy || !pgn || !white.trim() || !black.trim()} onClick={submit}>{busy ? 'Firmando…' : 'Registrar'}</button>
       <p>{msg}</p>
     </section>
   )
