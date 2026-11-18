@@ -1,4 +1,8 @@
 import { useState } from 'react'
+import { PgnEditor, type PgnMeta } from './PgnEditor'
+
+// Header Result del PGN → índice de RESULTS.
+const PGN_RESULT: Record<string, number> = { '1-0': 0, '0-1': 1, '1/2-1/2': 2 }
 import { hashPgn, toHex } from '../lib/pgn'
 import { registerGame, friendlyError } from '../lib/contract'
 import { RESULTS } from '../lib/config'
@@ -10,6 +14,14 @@ export function RegisterGame({ address }: { address?: string }) {
   const [result, setResult] = useState(0)
   const [msg, setMsg] = useState('')
   const [busy, setBusy] = useState(false)
+
+  // El PGN manda: si trae headers, pisan lo cargado a mano.
+  function fillFromPgn(m: PgnMeta) {
+    if (m.white) setWhite(m.white)
+    if (m.black) setBlack(m.black)
+    const r = m.result ? PGN_RESULT[m.result] : undefined
+    if (r !== undefined) setResult(r)
+  }
 
   async function submit() {
     if (!address) return setMsg('Conectá tu wallet primero.')
@@ -38,8 +50,8 @@ export function RegisterGame({ address }: { address?: string }) {
             </select>
           </label>
         </div>
-        <label><span className="label">PGN</span><textarea rows={8} placeholder="1. e4 e5 2. Nf3 …" value={pgn} onChange={(e) => setPgn(e.target.value)} /></label>
-        <button className="btn-red" disabled={busy || !pgn || !white.trim() || !black.trim()} onClick={submit}>{busy ? 'Firmando…' : 'Registrar'}</button>
+        <PgnEditor value={pgn} onChange={setPgn} disabled={busy} onMeta={fillFromPgn} />
+        <button className="btn-red" aria-busy={busy} disabled={busy || !pgn || !white.trim() || !black.trim()} onClick={submit}>{busy ? 'Firmando…' : 'Registrar'}</button>
         {msg && <p className="msg">{msg}</p>}
       </div>
     </section>
